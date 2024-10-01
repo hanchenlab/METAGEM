@@ -83,7 +83,15 @@ Input/Output File Options:
      1: model-based summary statistics.                       
      2: robust summary statistics.                       
      Default: 0
-   
+
+   --additional-joint
+     The exposure name(s) and the full path of the output file for one additional joint test.
+
+   --additional-interaction
+     The exposure name(s) and the full path of the output file for one additional interaction-only test.
+
+   --control-file
+     A no header text file containing file names in seperate lines with a 'FILE' in front of the file name in each line, and containing both of the changed column name(s) and the original column name(s) following the line(s) of the file name(s) which need to do column name changing. This file should contain at least two file names.
 ```
 </details>
 
@@ -146,12 +154,46 @@ The '--meta-option' flag can be used to specify which columns should be included
  
 <br />
 
-### Example
+The '--additional-joint' flag can be used to define an additional joint test to run. The name(s) of the exposure(s) which will be included in the additional joint test should be listed. The full path of the output file of the additional joint test should be specified after the exposure name(s).
+
+The '--additional-interaction' flag can be used to define an additional interaction-only test to run. The name(s) of exposure(s) which will be included in the additional interaction-only test should be listed. The full path of the output file of the additional interaction-only test should be specified after the exposure name(s).
+
+For an example situation which has a total of 2 covariates (cov1 and cov2) in the full test, an additional joint test with only cov1 as exposure can be defined as:
 ```unix
-./METAGEM --input-files file1.out file2.out file3.out --exposure-names cov1 --out metagem.out
+--additional-joint cov1 metagem2.out
+```
+An additional interaction-only test with only cov1 as exposure can be defined as:
+```unix
+--additional-interaction cov1 metagem2.out
+```
+
+<br />
+
+The '--control-file' flag can be used to specify all the input file names, and change the column name(s) of any input file that has different header name(s) with the standard GEM output file. All the input file names should be specified in different lines of the control file with a 'FILE' in front of the file names. For each file that need to change any column name, the pairs of the changed column name (i.e. the standard GEM output file header name) and the original column name should be specified in the following lines of the file name, with each pair a line. If this flag is used, then the '--input-files' flag and the '--input-file-list' flag should not be used.  
+
+An example of a control file containing 3 files, and need to change 2 header names for the first file:
+```unix
+FILE file1.out
+SNPID ID
+CHR chromosome
+FILE file2.out
+FILE file3.out
+```
+
+<br />
+
+### Example with the main test:
+```unix
+./METAGEM --input-files file1.out file2.out file3.out --exposure-names cov1 cov2 --out metagem.out
 ```
 <br />
+
+### Example with the main test and additional tests:
+```unix
+./METAGEM --input-files file1.out file2.out file3.out --exposure-names cov1 cov2 --out metagem1.out --additional-joint cov1 metagem2.out --additional-interaction cov1 metagem3.out
+```
 <br />
+
 
 ## Contact 
 For comments, suggestions, bug reports and questions, please contact Han Chen (Han.Chen.2@uth.tmc.edu), Alisa Manning (AKMANNING@mgh.harvard.edu), Kenneth Westerman (KEWESTERMAN@mgh.harvard.edu) or Cong Pan (Cong.Pan@uth.tmc.edu). For bug reports, please include an example to reproduce the problem without having to access your confidential data.
